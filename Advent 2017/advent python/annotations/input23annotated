@@ -1,0 +1,36 @@
+	b = 79
+	c = 79
+	to 5
+	jnz 1 5			next
+	mul b 100		b = 7900
+	sub b -100000		b = 107900
+	set c b			c = 107900 
+	sub c -17000		c = b+17000 -> 124900
+>	set f 1			f = 1
+	set d 2			d = 2
+>	set e 2			e = 2
+>	set g d			g = 2
+	mul g e			g = d*e
+	sub g b					g = d*e-b		-> b = d*e = 107900 + 17*loop -> can increment
+	jnz g 2		setsf=0		g = 0
+	set f 0			
+	sub e -1			e + 1
+	set g e			g = e
+	sub g b					g = e-b		->e=b -> e = 107900 + 17*loop
++	jnz g -8 	to12		g = 0 -> e-b = 0 -> loops until e = b
+	sub d -1			d + 1
+	set g d			g = d
+	sub g b					g = d-b		->d=b -> d = 107900 + 17*loop
++	jnz g -13	to11	noskip -> g=0		-> loops until e = d = b
+	jnz f 2			noskip -> f=0 -> g = d*e-b
+	sub h -1		h-=1
+e	set g b			g = b
+e	sub g c					g = b-c		->b=c -> b = 124900 -> 1k loops
+e	jnz g 2				g = 0
+e	jnz 1 3			end
+	sub b -17	+17	
++	jnz 1 -23	to9
+
+for f = 0, g = d*e-b	-> d*e=b
+b final = c = 124900
+b = 107900 + 17*loop

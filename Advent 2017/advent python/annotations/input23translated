@@ -1,0 +1,21 @@
+b=79
+c=79
+b=7900
+b=107900
+c=b
+c=124900
+do {
+	f = false
+	d = 2
+	do {
+		e = 2
+		do {
+			if e*d == b
+				f = true
+			e += 1
+		} while (e != b)
+		d += 1
+	} while (d != b)
+	if (f) { h += 1 }
+b += 17
+} while (b != c)
