@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MenuCallbacks : MonoBehaviour
 {
@@ -10,4 +11,10 @@ public class MenuCallbacks : MonoBehaviour
     {
         Application.OpenURL(url);
     }
+
+    public void SwitchScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
 }

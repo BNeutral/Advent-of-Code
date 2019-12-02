@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,20 +11,18 @@ public class Rocket : MonoBehaviour
     private int mass;
     private int fuel;
     private bool liftoff;
+    public Action callback { private get; set; }
     public float velocity;
-    public float liftoffDelay;
+    [Tooltip("Delay before the fueling starts")]
+    public float fuelDelay;
+    [Tooltip("Delay between fueling steps")]
+    public float fuelStepDelay;
     
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
-        if (Time.realtimeSinceStartup > liftoffDelay)
+        if (liftoff)
         {
             float newY = root.localPosition.y + velocity * Time.deltaTime;
             root.localPosition = new Vector3(root.localPosition.x, newY, root.localPosition.z);
@@ -50,14 +49,15 @@ public class Rocket : MonoBehaviour
         loadTranform.localScale = new Vector3(1, mass * scaleConversion, 1);
         fuel = 0;
         int nextFuel = CalculateFuel(mass);
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(fuelDelay);
         while (nextFuel > 0)
         {
             fuel += nextFuel;
             AdjustScales(fuel, scaleConversion);
             nextFuel = CalculateFuel(nextFuel);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(fuelStepDelay);
         }
+        callback();
     }
 
     /**
@@ -75,6 +75,14 @@ public class Rocket : MonoBehaviour
     private int CalculateFuel(int mass)
     {
         return (mass / 3 - 2);
+    }
+
+    /**
+     * Launches the rocket
+     */
+    public void launch()
+    {
+        liftoff = true;
     }
 
 }

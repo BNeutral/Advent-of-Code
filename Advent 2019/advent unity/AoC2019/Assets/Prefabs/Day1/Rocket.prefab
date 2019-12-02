@@ -119,7 +119,7 @@ Transform:
   m_GameObject: {fileID: 1766314829847191804}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 0, z: 1}
   m_Children:
   - {fileID: 5346135096694907967}
   m_Father: {fileID: 3068126444378149285}
@@ -5110,7 +5110,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: 20
-  liftoffDelay: 12
+  fuelDelay: 1
+  fuelStepDelay: 0.5
 --- !u!1 &7503263786192119814
 GameObject:
   m_ObjectHideFlags: 0
@@ -5136,7 +5137,7 @@ Transform:
   m_GameObject: {fileID: 7503263786192119814}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 0, z: 1}
   m_Children:
   - {fileID: 6276881464803470320}
   m_Father: {fileID: 3068126444378149285}
