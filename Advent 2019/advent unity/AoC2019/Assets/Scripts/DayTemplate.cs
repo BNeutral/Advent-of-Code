@@ -11,16 +11,21 @@ public abstract class DayTemplate : MonoBehaviour
 {
     [Tooltip("Text file to use as input")]
     public TextAsset inputFile;
+    [Tooltip("If not null, use this string instead of the default input file.")]
+    public string textInput;
 
     /**
      * Decides which input to give to the Day
      */
     protected string getText()
     {
-        if (DayMenu.CustomInputPath != null && DayMenu.CustomInputPath.Length > 0 && DayMenu.CustomInputPathScene != null && SceneManager.GetActiveScene().name == DayMenu.CustomInputPathScene)
-        {
-            return File.ReadAllText(DayMenu.CustomInputPath);
-        }
+        if (textInput != "") return textInput;
         else return inputFile.text;
     }
+
+    /**
+     * Resets the scene back to the starting state more or less
+     */
+    public abstract void ResetScene();
+
 }

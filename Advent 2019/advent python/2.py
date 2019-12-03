@@ -36,7 +36,7 @@ def part2(data, target):
 			newData[1] = x
 			newData[2] = y
 			if runProgram(newData) == target:
-				return x,y
+				return 100*x+y
 
 #Execution stuff
 
@@ -50,21 +50,9 @@ def test1():
 def main():
 	rawInput = open("./input/2.txt").read()
 	data = dataToParsedArray(rawInput)
-	#print(part1(data))
-	print(part2(data, 19690720))
+	print(part1(data.copy()))
+	print(part2(data.copy(), 19690720))
 	return
 
 #test1()
-#test2()
 main()
-
-#Python reminders
-#range(start, end+1, step), len
-#{}, for k in dict, for k,v in dict.items(), for v in dict.values()  
-#set(), .add(x), .remove(x), .discard(x) no error if missing, x in s, |= union, &= intersect, -= difference, .copy()
-#[], .append(), .insert(i,x), .pop([i]), .remove(x), .reverse(), sort(arr) in place, sorted(arr) new arr 
-#map(single param function, list)
-#filter(single param boolean returning function, list)
-#reduce(2 param function, list)
-#lambda x: x**2
-#// integer division in python3

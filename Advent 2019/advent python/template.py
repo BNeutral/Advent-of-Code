@@ -83,3 +83,5 @@ main()
 #reduce(2 param function, list)
 #lambda x: x**2
 #// integer division in python3
+#sys.maxsize
+#common global functions: abs() max() min() len()

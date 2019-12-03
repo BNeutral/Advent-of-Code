@@ -15,8 +15,7 @@ public class Day1 : DayTemplate
     private List<Transform> rockets;
     private int rocketsReady;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         rockets = new List<Transform>();
         loads = new List<int>();
@@ -39,11 +38,10 @@ public class Day1 : DayTemplate
         float scaleConversion = unitsForMaxLoad / maxLoad;
         for (int x = 0; x < loads.Count; ++x)
         {
-            Transform rocket = Instantiate(rocketPrefab);
+            Transform rocket = Instantiate(rocketPrefab, new Vector3(0.5f + 1.5f * x, 0, 0), Quaternion.identity);
             Rocket component = rocket.GetComponent<Rocket>();
             component.Initialize(loads[x], scaleConversion);
             component.callback = CallBack;
-            rocket.position = new Vector3( 0.5f + 1.5f * x,0,0);
             rockets.Add(rocket);
         }
     }
@@ -58,5 +56,12 @@ public class Day1 : DayTemplate
             }
         }
     }
-
+    public override void ResetScene()
+    {
+        foreach(Transform rocket in rockets)
+        {
+            Destroy(rocket.gameObject);
+        }
+        Awake();
+    }
 }

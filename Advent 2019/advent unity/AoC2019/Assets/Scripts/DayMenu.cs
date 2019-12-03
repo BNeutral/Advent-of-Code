@@ -1,42 +1,66 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEditor;
+using UnityEngine.UI;
 
-[RequireComponent(typeof(CanvasGroup))]
 public class DayMenu : MonoBehaviour
 {
-    private CanvasGroup CanvasGroup;
+    [Tooltip("UI element that shows the instructions and can be disabled.")]
+    public GameObject Instructions;
+    [Tooltip("UI element for setting the custom input.")]
+    public GameObject Modal;
+    [Tooltip("UI element with the actual custom input text.")]
+    public InputField CustomInputText;
     [Tooltip("Name of the scene to return to.")]
-    public string MenuSceneName;
+    public string MenuSceneName = "Menu";
     [Tooltip("Object that contains a GameTemplate component")]
-    public GameObject inputOwner;
-    public static string CustomInputPath;
-    public static string CustomInputPathScene;
-
-    private void Start()
-    {
-        CanvasGroup = GetComponent<CanvasGroup>();
-    }
+    public GameObject DayTemplateOwner;
+    private bool acceptInput = true;
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            SwitchScene(MenuSceneName);
-        }
-        else if (Input.GetKeyDown(KeyCode.R))
+        if (acceptInput)
         {
-            ResetScene();
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                SwitchScene(MenuSceneName);
+            }
+            else if (Input.GetKeyDown(KeyCode.R))
+            {
+                ResetScene();
+            }
+            else if (Input.GetKeyDown(KeyCode.L))
+            {
+                LoadCustomInput();
+            }
+            else if (Input.GetKeyDown(KeyCode.H))
+            {
+                FlipHiding();
+            }
         }
-        else if(Input.GetKeyDown(KeyCode.L))
+    }
+
+    /**
+     * Handles the result of using the file browser
+     */
+    private void LoadCustomInput()
+    {
+        acceptInput = false;
+        Modal.SetActive(true);        
+    }
+
+    /**
+     * Function to call from the modal when the buttons are pressed
+     */
+    public void ReturnFromModal(bool applyChanges)
+    {
+        Modal.SetActive(false);
+        acceptInput = true;
+        if (applyChanges)
         {
-            CustomInputPath = EditorUtility.OpenFilePanel("What input file?", "", "txt");
-            CustomInputPathScene = SceneManager.GetActiveScene().name;
-            ResetScene();
+            DayTemplateOwner.GetComponent<DayTemplate>().textInput = CustomInputText.text;
+            DayTemplateOwner.GetComponent<DayTemplate>().ResetScene();
         }
-        else if(Input.GetKeyDown(KeyCode.H))
-        {
-            FlipHiding();
-        }
+        
     }
 
     /**
@@ -44,8 +68,8 @@ public class DayMenu : MonoBehaviour
      */
     public void FlipHiding()
     {
-        CanvasGroup.alpha = CanvasGroup.alpha == 0f ? 1f : 0f;
-        return;
+        if (Instructions.activeSelf) Instructions.SetActive(false);
+        else Instructions.SetActive(true);
     }
 
     public void SwitchScene(string sceneName)
@@ -56,7 +80,7 @@ public class DayMenu : MonoBehaviour
 
     public void ResetScene()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        DayTemplateOwner.GetComponent<DayTemplate>().ResetScene();
     }
 
 }

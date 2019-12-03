@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class MenuCallbacks : MonoBehaviour
 {
     public string url;
+    public GameObject loadingImage;
 
     public void OpenURL()
     {
@@ -14,6 +15,7 @@ public class MenuCallbacks : MonoBehaviour
 
     public void SwitchScene(string sceneName)
     {
+        loadingImage.SetActive(true);
         SceneManager.LoadScene(sceneName);
     }
 

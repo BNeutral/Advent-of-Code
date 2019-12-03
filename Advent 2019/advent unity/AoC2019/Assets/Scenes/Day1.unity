@@ -294,6 +294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputFile: {fileID: 4900000, guid: ad625da36ece6884fa09cb0aa32f7d9e, type: 3}
+  textInput: 
   rocketPrefab: {fileID: 3068126444378149285, guid: d55717d42da758c478c1785d8f969db1,
     type: 3}
   unitsForMaxLoad: 24
@@ -681,5 +682,10 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1690451382897885620, guid: ab8a622139b9e8e46a1b13734ada3e8f,
+        type: 3}
+      propertyPath: inputOwner
+      value: 
+      objectReference: {fileID: 1046698250}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab8a622139b9e8e46a1b13734ada3e8f, type: 3}
