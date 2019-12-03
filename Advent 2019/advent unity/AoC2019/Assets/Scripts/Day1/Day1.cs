@@ -64,4 +64,15 @@ public class Day1 : DayTemplate
         }
         Awake();
     }
+
+    public override void RandomizeInput()
+    {
+        textInput = "";
+
+        for (int x = 0; x < rockets.Count; x++)
+        {
+            textInput += Random.Range(30000, 120000).ToString();
+            textInput += "\n";
+        }
+    }
 }

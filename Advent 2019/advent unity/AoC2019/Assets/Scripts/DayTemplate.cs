@@ -19,13 +19,18 @@ public abstract class DayTemplate : MonoBehaviour
      */
     protected string getText()
     {
-        if (textInput != "") return textInput;
-        else return inputFile.text;
+        if (textInput != "") return textInput.Trim();
+        else return inputFile.text.Trim();
     }
 
     /**
      * Resets the scene back to the starting state more or less
      */
     public abstract void ResetScene();
+
+    /**
+     * Randomizes the input of the scene
+     */
+    public abstract void RandomizeInput();
 
 }

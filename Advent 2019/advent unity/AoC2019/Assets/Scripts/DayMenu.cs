@@ -14,6 +14,8 @@ public class DayMenu : MonoBehaviour
     public string MenuSceneName = "Menu";
     [Tooltip("Object that contains a GameTemplate component")]
     public GameObject DayTemplateOwner;
+    [Tooltip("If the scene allows randomization of the input")]
+    public bool allowRandomization = true;
     private bool acceptInput = true;
 
     public void Update()
@@ -35,6 +37,10 @@ public class DayMenu : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.H))
             {
                 FlipHiding();
+            }
+            else if (Input.GetKeyDown(KeyCode.A))
+            {
+                RandomizeInput();
             }
         }
     }
@@ -81,6 +87,15 @@ public class DayMenu : MonoBehaviour
     public void ResetScene()
     {
         DayTemplateOwner.GetComponent<DayTemplate>().ResetScene();
+    }
+
+    private void RandomizeInput()
+    {
+        if (allowRandomization)
+        { 
+            DayTemplateOwner.GetComponent<DayTemplate>().RandomizeInput();
+            DayTemplateOwner.GetComponent<DayTemplate>().ResetScene();
+        }
     }
 
 }
