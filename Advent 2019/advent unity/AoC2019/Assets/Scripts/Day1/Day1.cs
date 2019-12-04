@@ -5,22 +5,21 @@ using UnityEngine;
 
 public class Day1 : DayTemplate
 {
-    [Tooltip("Text file to use as input if provided at runtime")]
-    public static string inputFilePath;
     [Tooltip("Prefab for rockets. Should have a Rocket component.")]
-    public Transform rocketPrefab;
+    public Transform RocketPrefab;
     [Tooltip("How many unity length units for the biggest ship?")]
-    public float unitsForMaxLoad;
-    private List<int> loads;
-    private List<Transform> rockets;
-    private int rocketsReady;
+    public float UnitsForMaxLoad;
+    private List<int> Loads;
+    private List<Transform> Rockets;
+    private int RocketsReady;
 
     void Awake()
     {
-        rockets = new List<Transform>();
-        loads = new List<int>();
+        base.Awake();
+        Rockets = new List<Transform>();
+        Loads = new List<int>();
         int maxLoad = 0;
-        using (StringReader reader = new StringReader(getText()))
+        using (StringReader reader = new StringReader(textInput))
         {
             string line = string.Empty;
             do
@@ -29,36 +28,36 @@ public class Day1 : DayTemplate
                 if (line != null)
                 {
                     int mass = int.Parse(line);
-                    loads.Add(mass);
+                    Loads.Add(mass);
                     maxLoad = Mathf.Max(maxLoad, mass);
                 }
 
             } while (line != null);
         }
-        float scaleConversion = unitsForMaxLoad / maxLoad;
-        for (int x = 0; x < loads.Count; ++x)
+        float scaleConversion = UnitsForMaxLoad / maxLoad;
+        for (int x = 0; x < Loads.Count; ++x)
         {
-            Transform rocket = Instantiate(rocketPrefab, new Vector3(0.5f + 1.5f * x, 0, 0), Quaternion.identity);
+            Transform rocket = Instantiate(RocketPrefab, new Vector3(0.5f + 1.5f * x, 0, 0), Quaternion.identity);
             Rocket component = rocket.GetComponent<Rocket>();
-            component.Initialize(loads[x], scaleConversion);
+            component.Initialize(Loads[x], scaleConversion);
             component.callback = CallBack;
-            rockets.Add(rocket);
+            Rockets.Add(rocket);
         }
     }
 
     void CallBack()
     {
-        rocketsReady += 1;
-        if (rocketsReady >= rockets.Count)
+        RocketsReady += 1;
+        if (RocketsReady >= Rockets.Count)
         {
-            foreach (Transform rocket in rockets){
+            foreach (Transform rocket in Rockets){
                 rocket.GetComponent<Rocket>().launch();
             }
         }
     }
     public override void ResetScene()
     {
-        foreach(Transform rocket in rockets)
+        foreach(Transform rocket in Rockets)
         {
             Destroy(rocket.gameObject);
         }
@@ -69,7 +68,7 @@ public class Day1 : DayTemplate
     {
         textInput = "";
 
-        for (int x = 0; x < rockets.Count; x++)
+        for (int x = 0; x < Rockets.Count; x++)
         {
             textInput += Random.Range(30000, 120000).ToString();
             textInput += "\n";

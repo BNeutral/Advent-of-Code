@@ -2,6 +2,9 @@
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+/**
+ * The script for handling the generic menu shown on the top left of each day
+ */
 public class DayMenu : MonoBehaviour
 {
     [Tooltip("UI element that shows the instructions and can be disabled.")]
@@ -18,40 +21,56 @@ public class DayMenu : MonoBehaviour
     public bool allowRandomization = true;
     private bool acceptInput = true;
 
+    public KeyCode menuKey = KeyCode.Q;
+    public KeyCode resetKey = KeyCode.W;
+    public KeyCode loadKey = KeyCode.E;
+    public KeyCode randomizeKey = KeyCode.R;
+    public KeyCode hideKey = KeyCode.T;
+
+    private Vector3 FirstTouch;   //First touch position
+    private Vector3 LastTouch;   //Last touch position
+    private float dragDistance;  //minimum distance for a swipe to be registered
+
     public void Update()
     {
         if (acceptInput)
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(menuKey))
             {
-                SwitchScene(MenuSceneName);
+                BackToMenu();
             }
-            else if (Input.GetKeyDown(KeyCode.R))
+            else if (Input.GetKeyDown(resetKey))
             {
                 ResetScene();
             }
-            else if (Input.GetKeyDown(KeyCode.L))
+            else if (Input.GetKeyDown(loadKey))
             {
                 LoadCustomInput();
             }
-            else if (Input.GetKeyDown(KeyCode.H))
+            else if (Input.GetKeyDown(hideKey))
             {
                 FlipHiding();
             }
-            else if (Input.GetKeyDown(KeyCode.A))
+            else if (Input.GetKeyDown(randomizeKey))
             {
                 RandomizeInput();
             }
         }
+        CheckSideSwipeForHiding();
+    }
+
+    public void BackToMenu()
+    {
+        SwitchScene(MenuSceneName);
     }
 
     /**
      * Handles the result of using the file browser
      */
-    private void LoadCustomInput()
+    public void LoadCustomInput()
     {
         acceptInput = false;
-        Modal.SetActive(true);        
+        Modal.SetActive(true);
     }
 
     /**
@@ -66,7 +85,7 @@ public class DayMenu : MonoBehaviour
             DayTemplateOwner.GetComponent<DayTemplate>().textInput = CustomInputText.text;
             DayTemplateOwner.GetComponent<DayTemplate>().ResetScene();
         }
-        
+
     }
 
     /**
@@ -89,13 +108,51 @@ public class DayMenu : MonoBehaviour
         DayTemplateOwner.GetComponent<DayTemplate>().ResetScene();
     }
 
-    private void RandomizeInput()
+    public void RandomizeInput()
     {
         if (allowRandomization)
-        { 
+        {
             DayTemplateOwner.GetComponent<DayTemplate>().RandomizeInput();
             DayTemplateOwner.GetComponent<DayTemplate>().ResetScene();
         }
     }
 
+    void Start()
+    {
+        string text = DayTemplateOwner.GetComponent<DayTemplate>().textInput;
+        if (text != "") CustomInputText.text = text;
+        dragDistance = Screen.height * 15 / 100; //dragDistance is 15% height of the screen
+    }
+
+    /**
+     * Code from https://forum.unity.com/threads/simple-swipe-and-tap-mobile-input.376160/
+     * Checks if a horizontal swipe motion happened to hide/show the menu
+     */
+    void CheckSideSwipeForHiding()
+    {
+        if (Input.touchCount == 1) // user is touching the screen with a single touch
+        {
+            Debug.Log("onetouch");
+            Touch touch = Input.GetTouch(0); // get the touch
+            if (touch.phase == TouchPhase.Began) //check for the first touch
+            {
+                FirstTouch = touch.position;
+                LastTouch = touch.position;
+            }
+            else if (touch.phase == TouchPhase.Moved) // update the last position based on where they moved
+                LastTouch = touch.position;
+            else if (touch.phase == TouchPhase.Ended) //check if the finger is removed from the screen
+            {
+                Debug.Log("neded");
+                LastTouch = touch.position;
+                if (Mathf.Abs(LastTouch.x - FirstTouch.x) > dragDistance)
+                {
+                    if ((LastTouch.x > FirstTouch.x))  //Right swipe
+                        Instructions.SetActive(true);
+                    else
+                        Instructions.SetActive(false);
+                }
+            }
+        }
+    }
 }

@@ -10,17 +10,15 @@ using UnityEngine.SceneManagement;
 public abstract class DayTemplate : MonoBehaviour
 {
     [Tooltip("Text file to use as input")]
-    public TextAsset inputFile;
+    [SerializeField]
+    private TextAsset inputFile;
     [Tooltip("If not null, use this string instead of the default input file.")]
+    [HideInInspector]
     public string textInput;
 
-    /**
-     * Decides which input to give to the Day
-     */
-    protected string getText()
+    protected void Awake()
     {
-        if (textInput != "") return textInput.Trim();
-        else return inputFile.text.Trim();
+        textInput = inputFile.text.Trim();
     }
 
     /**
