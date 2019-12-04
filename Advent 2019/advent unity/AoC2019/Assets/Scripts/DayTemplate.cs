@@ -18,7 +18,9 @@ public abstract class DayTemplate : MonoBehaviour
 
     protected void Awake()
     {
-        textInput = inputFile.text.Trim();
+        if (textInput == "") {
+            textInput = inputFile.text.Trim();
+        }        
     }
 
     /**

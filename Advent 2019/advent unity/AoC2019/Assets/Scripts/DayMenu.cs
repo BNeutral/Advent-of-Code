@@ -59,6 +59,9 @@ public class DayMenu : MonoBehaviour
         CheckSideSwipeForHiding();
     }
 
+    /**
+     * Switches back to the menu scene
+     */
     public void BackToMenu()
     {
         SwitchScene(MenuSceneName);
@@ -97,17 +100,25 @@ public class DayMenu : MonoBehaviour
         else Instructions.SetActive(true);
     }
 
+    /**
+     * Changes to a different scene
+     */
     public void SwitchScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
     }
 
-
+    /**
+     * Resets the scene
+     */
     public void ResetScene()
     {
         DayTemplateOwner.GetComponent<DayTemplate>().ResetScene();
     }
 
+    /**
+     * Randomizes the input data of the scene
+     */
     public void RandomizeInput()
     {
         if (allowRandomization)
