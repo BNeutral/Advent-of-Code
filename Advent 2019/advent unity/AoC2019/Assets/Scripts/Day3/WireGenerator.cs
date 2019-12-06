@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class WireGenerator : MonoBehaviour
 {
-    private List<int> Route;
+    private string[] Route;
 
     /**
      * Initializes the component
@@ -12,7 +12,7 @@ public class WireGenerator : MonoBehaviour
      */
     public void Initialize(string instructions)
     {
-
+        Route = instructions.Split(',');
     }
 
     // Start is called before the first frame update
