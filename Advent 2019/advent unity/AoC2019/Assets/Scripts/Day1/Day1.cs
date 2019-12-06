@@ -13,7 +13,7 @@ public class Day1 : DayTemplate
     private List<Transform> Rockets;
     private int RocketsReady;
 
-    void Awake()
+    new void Awake()
     {
         base.Awake();
         Rockets = new List<Transform>();

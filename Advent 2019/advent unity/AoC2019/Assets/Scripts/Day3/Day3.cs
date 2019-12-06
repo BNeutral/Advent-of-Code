@@ -5,37 +5,49 @@ using System.IO;
 
 public class Day3 : DayTemplate
 {
-    private List<Transform> WireGenerators;
+    [Tooltip("Prefab to use for laying spool")]
+    public Transform SpoolPrefab;
+    [Tooltip("Prefab to use for laying wire")]
+    public Transform WirePiecePrefab;
 
-    void Awake()
+    private List<WireGenerator> WireGenerators;
+
+    new void Awake()
     {
-        WireGenerators = new List<Transform>();
+        base.Awake();
+        WireGenerators = new List<WireGenerator>();
         using (StringReader reader = new StringReader(textInput))
         {
             string line = string.Empty;
+            int i = 0;
             do
             {
                 line = reader.ReadLine();
+                Debug.Log(line);
                 if (line != null)
                 {
-                    //line.Split(",");
-                    //loads.Add(mass);
-                    //maxLoad = Mathf.Max(maxLoad, mass);
+                    WireGenerator generator = gameObject.AddComponent(typeof(WireGenerator)) as WireGenerator;
+                    generator.Initialize(line, i, SpoolPrefab, WirePiecePrefab);
+                    WireGenerators.Add(generator);
+                    i += 1;
                 }
-
             } while (line != null);
         }
     }
 
-    void CallBack()
+    /**
+     * Callback function for WireGenerators to call after putting down a piece of wire
+     */
+    void LayWireCallback(int x, int y, int id)
     {
 
     }
+
     public override void ResetScene()
     {
-        foreach (Transform wire in WireGenerators)
+        foreach (WireGenerator wire in WireGenerators)
         {
-            Destroy(wire.gameObject);
+            Destroy(wire);
         }
         Awake();
     }

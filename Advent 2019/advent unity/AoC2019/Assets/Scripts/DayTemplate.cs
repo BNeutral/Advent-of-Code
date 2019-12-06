@@ -11,7 +11,7 @@ public abstract class DayTemplate : MonoBehaviour
 {
     [Tooltip("Text file to use as input")]
     [SerializeField]
-    private TextAsset inputFile;
+    private TextAsset inputFile = null;
     [Tooltip("If not null, use this string instead of the default input file.")]
     [HideInInspector]
     public string textInput;
