@@ -56,7 +56,7 @@ class Interpreter:
 		return pc+4
 
 	def opInput(self, pc, modes):
-		self.write(pc+3, modes[2], self.input)
+		self.write(pc+1, modes[0], self.input)
 		return pc+2
 
 	def opOutput(self, pc, modes):
@@ -134,5 +134,5 @@ def main():
 	part2(data.copy())
 	return
 
-#test2()
+test2()
 main()
