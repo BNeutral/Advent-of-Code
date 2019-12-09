@@ -85,3 +85,7 @@ main()
 #// integer division in python3
 #sys.maxsize
 #common global functions: abs() max() min() len()
+#from queue import Queue ->thread safe, can be blocking, .put() .get()
+#from threading import Thread ->thread = Thread(target = f). .start(), .join()
+#from itertools import permutations -> permutations(list)
+#from types import SimpleNamespace -> objet style = SimpleNamespace(**dict)	
