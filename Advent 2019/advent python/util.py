@@ -19,6 +19,9 @@ class Vector2:
 		self.x = x
 		self.y = y
 
+	def add(self, other):
+		return Vector2((self.x+other.x),(self.y+other.y))
+
 	def sub(self, other):
 		return Vector2((self.x-other.x),(self.y-other.y))
 
@@ -48,3 +51,6 @@ class Vector2:
 
 	def __eq__(self, other):
 		return self.x==other.x and self.y==other.y
+
+	def __hash__(self):
+		return hash( (self.x,self.y) )

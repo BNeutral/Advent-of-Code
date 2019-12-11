@@ -1,4 +1,5 @@
 from collections import defaultdict
+from util import *
 import re
 
 #File parsing stuff
@@ -78,6 +79,7 @@ main()
 #{}, for k in dict, for k,v in dict.items(), for v in dict.values()  
 #set(), .add(x), .remove(x), .discard(x) no error if missing, x in s, |= union, &= intersect, -= difference, .copy()
 #[], .append(), .insert(i,x), .pop([i]), .remove(x), .reverse(), sort(arr) in place, sorted(arr) new arr 
+#heap: heapq lib, heappush(list, value), heappop(list), value can be a tuple and gets sorted by 1st item
 #map(single param function, list)
 #filter(single param boolean returning function, list)
 #reduce(2 param function, list)

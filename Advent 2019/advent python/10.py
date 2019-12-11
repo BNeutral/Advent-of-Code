@@ -2,6 +2,7 @@ from collections import defaultdict
 import re
 import math
 from util import Vector2
+from heapq import heappush,heappop
 
 #File parsing stuff
 def dataToAsteroids(stringData) :
