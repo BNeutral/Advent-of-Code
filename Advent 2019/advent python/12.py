@@ -40,17 +40,12 @@ def simulateMoons(positions,steps):
 
 def simulateMoonUntilRepeat(positions, steps, repetitionDegree):
 	moons, moonPairs = createMoonsAndPairs(positions)
-	stateLength = len(moons)*6
 	initialState = []
 	for moon in moons:
 		initialState.extend(list(moon.pos))
 		initialState.extend(list(moon.velocity))
 	stepCounter = 0
-	sightings = []
-	cycles = []
-	for _ in range(stateLength):
-		sightings.append(set())
-		cycles.append([])
+	detector = CycleDetector(initialState, repetitionDegree)
 	for _ in range(steps):
 		updateMoons(moons, moonPairs)
 		stepCounter += 1
@@ -58,21 +53,8 @@ def simulateMoonUntilRepeat(positions, steps, repetitionDegree):
 		for moon in moons:
 			state.extend(list(moon.pos))
 			state.extend(list(moon.velocity))
-		for i in range(stateLength):
-			if state[i] == initialState[i]:
-				sightings[i].add(stepCounter)
-				cycleLength = stepCounter//repetitionDegree
-				hasRepeated = True
-				for x in range(repetitionDegree):
-					if not cycleLength*(x+1) in sightings[i]:
-						hasRepeated = False
-						break
-				if hasRepeated:
-					cycles[i].append(cycleLength)		
-	smallestPeriods = []
-	for i in range(stateLength):
-		smallestPeriods.append(min(cycles[i]))
-	smallestPeriods = list(dict.fromkeys(smallestPeriods))
+		detector.giveInput(state, stepCounter)	
+	smallestPeriods = detector.getCycles()
 	return smallestPeriods,minimumCommonMultiple(smallestPeriods)
 
 def createMoonsAndPairs(positions):

@@ -25,6 +25,43 @@ def arrayGDC(array):
 	return math.gcd(array[0],arrayGDC(array[1:]))
 
 #Classes
+
+#A class for finding cycles 
+class CycleDetector:
+
+	def __init__(self, stateToMatch, minRepeats):
+		self.initialState = stateToMatch
+		self.stateLength = len(stateToMatch)
+		self.sightings = []
+		self.cycles = []
+		self.minRepeats = minRepeats
+		for _ in range(self.stateLength):
+			self.sightings.append(set())
+			self.cycles.append([])
+
+	#Returns a list with the smallest cycles found
+	def getCycles(self):
+		smallestPeriods = []
+		for i in range(self.stateLength):
+			smallestPeriods.append(min(self.cycles[i]))
+		return list(dict.fromkeys(smallestPeriods))
+
+	#Given a new state, check repeats for each variable
+	def giveInput(self, state, step):
+		for i in range(self.stateLength):
+			if state[i] == self.initialState[i]:
+				self.sightings[i].add(step)
+				cycleLength = step//self.minRepeats
+				hasRepeated = True
+				for x in range(1,self.minRepeats+1):
+					if not cycleLength*(x) in self.sightings[i]:
+						hasRepeated = False
+						break
+				if hasRepeated:
+					self.cycles[i].append(cycleLength)	
+
+
+#A 2 dimensional vector
 class Vector2:
 
 	tolerance = 0.000001
