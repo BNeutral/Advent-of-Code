@@ -5,10 +5,16 @@ using System.IO;
 
 public class Day3 : DayTemplate
 {
+    [Tooltip("Colores to use for wires")]
+    public Color[] WireColors;
     [Tooltip("Prefab to use for laying spool")]
     public Transform SpoolPrefab;
     [Tooltip("Prefab to use for laying wire")]
     public Transform WirePiecePrefab;
+    [Tooltip("Amount of wires to randomly generate")]
+    public int RandomWireCount = 2;
+    [Tooltip("Segments of wires to randomly generate")]
+    public int RandomWireSegments = 200;
 
     private List<WireGenerator> WireGenerators;
 
@@ -27,12 +33,13 @@ public class Day3 : DayTemplate
                 if (line != null)
                 {
                     WireGenerator generator = gameObject.AddComponent(typeof(WireGenerator)) as WireGenerator;
-                    generator.Initialize(line, i, SpoolPrefab, WirePiecePrefab);
+                    generator.Initialize(line, i, SpoolPrefab, WirePiecePrefab, WireColors[i]);
                     WireGenerators.Add(generator);
                     i += 1;
                 }
             } while (line != null);
         }
+        Camera.main.orthographicSize = 50;
     }
 
     /**
@@ -54,11 +61,31 @@ public class Day3 : DayTemplate
 
     public override void RandomizeInput()
     {
+        string letters = "UDLR";
+        Dictionary<char, string> possibilities = new Dictionary<char, string>();
+        possibilities['U'] = "LR";
+        possibilities['D'] = "LR";
+        possibilities['L'] = "UD";
+        possibilities['R'] = "UD";
+        char[] toTrim = { ',' };
         textInput = "";
-        for (int x = 0; x < 5; x++)
+        for (int y = 0; y < RandomWireCount; y++)
         {
-            textInput += Random.Range(30000, 120000).ToString();
+            char dir = '?';
+            for (int x = 0; x < 200; x++)
+            {
+                if (dir != '?')
+                {
+                    dir = possibilities[dir][Random.Range(0, 2)];
+                }
+                else dir = letters[Random.Range(0,4)];
+                textInput += dir;
+                textInput += Random.Range(100, 500).ToString();
+                textInput += ",";
+            }
+            textInput = textInput.Trim(toTrim);
             textInput += "\n";
         }
+        ResetScene();
     }
 }

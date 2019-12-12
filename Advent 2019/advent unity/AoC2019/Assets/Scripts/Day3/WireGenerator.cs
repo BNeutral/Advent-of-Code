@@ -5,12 +5,13 @@ using UnityEngine;
 
 public class WireGenerator : MonoBehaviour
 {
-    [Tooltip("Color to assign to the wire pieces on creation")]
-    public Color WireColor;
-
-    //"Prefab to use for laying spool"
+    //Camera for zooming out
+    private Camera MainCamera;
+    //Color to assign to the wire
+    private Color WireColor;
+    //Prefab to use for laying spool
     private Transform SpoolPrefab;
-    //"Prefab to use for laying wire"
+    //Prefab to use for laying wire
     public Transform WirePiecePrefab;
     //Id of the wiregenerator
     private int id;
@@ -20,8 +21,10 @@ public class WireGenerator : MonoBehaviour
     private List<Transform> pieces;
     //For storing the last piece place
     private Vector2 position;
+    //For keeping track of pieces
+    private float PieceCounter = 0;
 
-    private float delay = 0f; 
+    private float delay = 1.0f; 
 
     private static Quaternion Vertical =  Quaternion.Euler(90,-90,90);
     private static Quaternion Horizontal = Quaternion.Euler(0,-90,90);
@@ -36,16 +39,17 @@ public class WireGenerator : MonoBehaviour
      * Initializes the component
      * insutrctions is string that looks like "U23,R45,D22,R23"etc
      */
-    public void Initialize(string instructions, int id, Transform SpoolPrefab, Transform WirePiecePrefab)
+    public void Initialize(string instructions, int id, Transform SpoolPrefab, Transform WirePiecePrefab, Color WireColor)
     {
+        this.WireColor = WireColor;
         this.SpoolPrefab = SpoolPrefab;
         this.WirePiecePrefab = WirePiecePrefab;
         pieces = new List<Transform>();
         Route = instructions.Split(',');
         this.id = id;
-        StartCoroutine("LayAllWire");
         position = Vector2.zero;
-        WireColor = id == 1 ? Color.grey : Color.yellow;
+        MainCamera = Camera.main;
+        StartCoroutine("LayAllWire");
     }
 
     /**
@@ -53,47 +57,53 @@ public class WireGenerator : MonoBehaviour
      */
     private IEnumerator LayAllWire()
     {
+        laySpool(position);
         foreach (string segment in Route)
         {
+            yield return new WaitForSeconds(delay);
+            delay *= 0.9f;
             Vector2 dir = directions[segment[0]];
             bool rotate = (dir == Vector2.right || dir == Vector2.left);
             int steps = int.Parse(segment.Substring(1));
-            laySpool(position);
             layWirePiece(position+(dir*steps/2), steps-30, rotate);
             position += dir * steps;
             laySpool(position);
-            yield return new WaitForSeconds(delay);
         }
     }
 
 
     private void layWirePiece(Vector3 position, float length = 1f, bool rotate = false)
     {
-        position.z += id;
+        position.z += id - (PieceCounter / 10000);
         Transform wire = Instantiate(WirePiecePrefab, position, rotate ? Horizontal : Vertical);
         wire.localScale = new Vector3(10, 1, length / 10);
         Material material = wire.gameObject.GetComponent<Renderer>().material;
         material.SetColor("_BaseColor", WireColor);
-        Vector2 scaling = new Vector2(1f, length/100);
+        Vector2 scaling = new Vector2(1f, length/200);
         material.SetTextureScale("_BumpMap", scaling);
         material.SetTextureScale("_BaseMap", scaling);
         pieces.Add(wire);
+        PieceCounter += 1;
     }
 
     private void laySpool(Vector3 position)
     {
-        position.z += id - 0.5f;
+        position.z += id - 0.5f - (PieceCounter / 10000); ;
         Transform spool = Instantiate(SpoolPrefab, position, Vertical);
         Material material = spool.gameObject.GetComponent<Renderer>().material;
         material.SetColor("_BaseColor", WireColor);
         pieces.Add(spool);
+        float size = MainCamera.orthographicSize;
+        float furthest = Mathf.Max(Mathf.Abs(position.x), Mathf.Abs(position.y));
+        if (size < furthest) MainCamera.orthographicSize = furthest;
+        PieceCounter += 1;
     }
 
     private void OnDestroy()
     {
         foreach (Transform piece in pieces)
         {
-            Destroy(piece);
+            if (piece != null) Destroy(piece.gameObject);
         }
     }
 }
