@@ -1,6 +1,5 @@
-from collections import defaultdict
-import re
 import math
+import sys
 
 #Parsing
 def linesToInt(lines):
@@ -23,6 +22,32 @@ def arrayGDC(array):
 	if len(array) <= 1:
 		return array[0]
 	return math.gcd(array[0],arrayGDC(array[1:]))
+
+#Visualization
+
+#printchars: Array with the character to use for each value the dict takes
+#0 should be the empty char
+#dict: Dictionary of vector2 positions
+def drawDictScreen(dic, printchars):
+	minx = sys.maxsize
+	maxx = -sys.maxsize
+	miny = sys.maxsize
+	maxy = -sys.maxsize
+	for vector in dic.keys():
+		minx = min(vector.x,minx)
+		miny = min(vector.y,minx)
+		maxx = max(vector.x,maxx)
+		maxy = max(vector.y,maxy)
+	result = ""
+	for y in range(miny,maxy+1):
+		for x in range(minx,maxx+1):
+			pos = Vector2(x,y)
+			if pos in dic:
+				result += printchars[dic[pos]]
+			else:
+				result += printchars[0]
+		result += "\n"
+	return result	
 
 #Classes
 
