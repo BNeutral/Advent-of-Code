@@ -28,24 +28,27 @@ def arrayGDC(array):
 #printchars: Array with the character to use for each value the dict takes
 #0 should be the empty char
 #dict: Dictionary of vector2 positions
-def drawDictScreen(dic, printchars):
+def drawDictScreen(dic, printchars=[" ","▓","░"], character=None):
 	minx = sys.maxsize
 	maxx = -sys.maxsize
 	miny = sys.maxsize
 	maxy = -sys.maxsize
 	for vector in dic.keys():
 		minx = min(vector.x,minx)
-		miny = min(vector.y,minx)
+		miny = min(vector.y,miny)
 		maxx = max(vector.x,maxx)
 		maxy = max(vector.y,maxy)
 	result = ""
 	for y in range(miny,maxy+1):
 		for x in range(minx,maxx+1):
 			pos = Vector2(x,y)
-			if pos in dic:
-				result += printchars[dic[pos]]
+			if character and pos == character:
+				result += "X"
 			else:
-				result += printchars[0]
+				if pos in dic:
+					result += printchars[dic[pos]]
+				else:
+					result += " "
 		result += "\n"
 	return result	
 
@@ -89,11 +92,14 @@ class CycleDetector:
 #A 2 dimensional vector
 class Vector2:
 
-	tolerance = 0.000001
 
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
+
+	tolerance = 0.000001
+
+
 
 	def add(self, other):
 		return Vector2((self.x+other.x),(self.y+other.y))
@@ -119,6 +125,9 @@ class Vector2:
 		arg = self.dotProduct(other) / (self.length()*other.length())
 		return arg <= 1 + Vector2.tolerance and arg >= 1 - Vector2.tolerance
 
+	def fourAdjacents(self):
+		return [self.add(Vector2.up),self.add(Vector2.down),self.add(Vector2.left),self.add(Vector2.right)]
+
 	def copy(self):
 		return Vector2(self.x,self.y)
 
@@ -130,6 +139,15 @@ class Vector2:
 
 	def __hash__(self):
 		return hash( (self.x,self.y) )
+
+	def __repr__(self):
+		return str(self.x)+","+str(self.y)
+
+Vector2.up = Vector2(0,-1)
+Vector2.down = Vector2(0,1)
+Vector2.left = Vector2(-1,0)
+Vector2.right = Vector2(1,0)	
+Vector2.zero = Vector2(0,0)	
 
 class Vector3:
 
