@@ -13,24 +13,6 @@ def part2(data):
 	result = upperHalffft(longData,100)
 	return result[offset:offset+8]
 
-def part222(data):
-	offset = getOffset(data)
-	longData = data.copy()*1000
-	result = fft(longData,100)
-	period = 0
-	aDecentChunk = result[0:len(data)]
-	for x in range(len(result)-len(aDecentChunk)):
-		foundIt = True
-		for y in range(len(aDecentChunk)):
-			if aDecentChunk[y] != result[x]:
-				foundIt = False
-				break
-		if foundIt:
-			period = x
-			break
-	offset %= period
-	print(result[offset:offset+8])
-
 def getOffset(data):
 	offset = 0
 	for x in range(7):
