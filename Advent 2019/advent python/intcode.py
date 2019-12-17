@@ -1,9 +1,11 @@
 from queue import Queue
+from threading import Thread
 
 class Interpreter:
 
 	#array is an array of ints contains the program 
 	#inp is the input as an array
+	#usefaultInput : if true requests for input return the last element of the starting input
 	def __init__(self, array, inp, useDefaultInput=True):
 		self.array = array.copy()
 		self.inputs = Queue()
@@ -18,6 +20,11 @@ class Interpreter:
 
 	def __repr__(self):
 		return str(self.__dict__)
+
+	def runInThread(self):
+		thread = Thread(target = self.runProgram)
+		thread.start()
+		return thread
 
 	def runProgram(self):
 		self.isRunning = True

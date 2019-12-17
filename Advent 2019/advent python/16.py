@@ -1,6 +1,4 @@
-from collections import defaultdict
 from util import *
-import re
 
 #Problem code
 
@@ -10,7 +8,7 @@ def part1(data, iterations):
 def part2(data):
 	offset = getOffset(data)
 	longData = data.copy()*10000
-	result = upperHalffft(longData,100)
+	result = upperHalffft(longData,100,offset)
 	return result[offset:offset+8]
 
 def getOffset(data):
@@ -19,12 +17,14 @@ def getOffset(data):
 			offset += data[x] * (10**(6-x))
 	return offset
 
-def upperHalffft(data, iterations):
+def upperHalffft(data, iterations, offset):
 	length = len(data)
+	if offset < length//2:
+		return "Can't compute"
 	newData = [0] * length
 	for _ in range(iterations):
 		newData[length-1] = data[length-1]
-		for i in range(length-2,length//2,-1):
+		for i in range(length-2,offset-1,-1):
 			dataElement = data[i]
 			result = dataElement + newData[i+1]
 			newData[i] = result%10

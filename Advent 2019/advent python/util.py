@@ -52,6 +52,27 @@ def drawDictScreen(dic, printchars=[" ","▓","░"], character=None):
 		result += "\n"
 	return result	
 
+def drawDictScreenSimple(dic):
+	minx = sys.maxsize
+	maxx = -sys.maxsize
+	miny = sys.maxsize
+	maxy = -sys.maxsize
+	for vector in dic.keys():
+		minx = min(vector.x,minx)
+		miny = min(vector.y,miny)
+		maxx = max(vector.x,maxx)
+		maxy = max(vector.y,maxy)
+	result = ""
+	for y in range(miny,maxy+1):
+		for x in range(minx,maxx+1):
+			pos = Vector2(x,y)
+			if pos in dic:
+				result += str(dic[pos])
+			else:
+				result += " "
+		result += "\n"
+	return result	
+
 #Classes
 
 #A class for finding cycles 
@@ -91,15 +112,12 @@ class CycleDetector:
 
 #A 2 dimensional vector
 class Vector2:
-
-
+	
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
 
 	tolerance = 0.000001
-
-
 
 	def add(self, other):
 		return Vector2((self.x+other.x),(self.y+other.y))
