@@ -150,8 +150,6 @@ class Maze:
 	def findMinPath(self):
 		graph = nx.Graph() #graph of (state,lastkey1,lastkey2,...,lastkeyn) -> nextstate
 		visited = set()
-		for nextState in self.reachableStates[0]:
-			graph.add_edge( (0,-1,-2,-3,-4), (nextState,nextState), weight=len(self.paths[(0,nextState)])-1)
 		toVisit = set()
 		toVisit.add( (0,-1,-2,-3,-4) )
 		while len(toVisit) > 0:
