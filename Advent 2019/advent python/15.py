@@ -1,15 +1,12 @@
-from collections import defaultdict
 from util import *
 from intcode import Interpreter
-from threading import Thread
 import random
 
 #Problem code
 
 def part1and2(data):
 	program = Interpreter(data, [], False)
-	thread = Thread(target = program.runProgram)
-	thread.start()
+	thread = program.runInThread()
 	program.isRunning = True
 	controller = Controller(program)
 	tileMap = controller.getMap()
@@ -112,7 +109,9 @@ class Controller:
 def main():
 	rawInput = open("./input/15.txt").read()
 	data = commaSeparatedLineToInts(rawInput)
-	print(part1and2(data))
+	p1,p2 = part1and2(data)
+	print(p1)
+	print(p2)
 	return
 
 main()

@@ -1,5 +1,4 @@
 from collections import defaultdict
-import re
 
 #File parsing stuff
 def dataToParsedArray(stringData) :
@@ -41,7 +40,7 @@ class OrbitTracker:
 		self.directOrbits[second].append(first)
 
 	def traverse(self, start="COM", end=None):
-		counter = defaultdict(lambda: 0)
+		counter = defaultdict(int)
 		visited = set()
 		toVisit = set()
 		toVisit.add(start)
@@ -49,6 +48,8 @@ class OrbitTracker:
 			current = toVisit.pop()
 			visited.add(current)
 			for planet in self.directOrbits[current]:
+				if planet in visited:
+					continue
 				counter[planet] = counter[current] + 1
 				if planet not in visited:
 					toVisit.add(planet)

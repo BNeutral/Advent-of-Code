@@ -1,8 +1,5 @@
-from collections import defaultdict
-import re
 import math
 from util import Vector2
-from heapq import heappush,heappop
 
 #File parsing stuff
 def dataToAsteroids(stringData) :
@@ -129,8 +126,9 @@ def test2():
 
 def main():
 	rawInput = open("./input/10.txt").read()
-	visible, x, y = part1(rawInput)
-	print(visible, x, y)
+	print("Computing...")
+	visible, x, y = part1(rawInput)	
+	print(visible, "at:", x, y)
 	print(part2(rawInput,x,y))
 	return
 

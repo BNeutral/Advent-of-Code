@@ -1,4 +1,3 @@
-from collections import defaultdict
 import math
 
 #File parsing stuff
@@ -45,7 +44,7 @@ def part2(data):
 			if window == 1:
 				repeats.add(fuel)		
 		ore = calculateOreNeeded(tree, fuel)
-	return ore,fuel
+	return int(fuel)
 
 def calculateOreNeeded(tree, fuelAmount):
 	for node in tree.values():

@@ -1,4 +1,3 @@
-from collections import defaultdict
 from util import *
 from intcode import Interpreter
 import re

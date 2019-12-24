@@ -1,8 +1,5 @@
-from collections import defaultdict
 from util import *
-import re
 from intcode import Interpreter
-from threading import Thread
 
 #Problem code
 
@@ -16,8 +13,7 @@ def part2(data):
 	data = data.copy()
 	data[0] = 2
 	program = Interpreter(data, [], False)
-	thread = Thread(target = program.runProgram)
-	thread.start()
+	thread = program.runInThread()
 	screen = {}
 	info = {}
 	while True:
@@ -27,7 +23,7 @@ def part2(data):
 				screen[key] = value
 			for key,value in newInfo.items():
 				info[key] = value
-			printScreen(screen)
+			#printScreen(screen)
 			if not program.isRunning:
 				thread.join()
 				return info["score"]
@@ -83,6 +79,7 @@ def getOutput(interpreter):
 def main():
 	rawInput = open("./input/13.txt").read()
 	data = commaSeparatedLineToInts(rawInput)
+	print("Computing. Uncomment line 30 if you want visual updates...")
 	print(part1(data))
 	print(part2(data))
 	return

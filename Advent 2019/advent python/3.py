@@ -1,5 +1,3 @@
-from collections import defaultdict
-import re
 import sys
 
 #File parsing stuff

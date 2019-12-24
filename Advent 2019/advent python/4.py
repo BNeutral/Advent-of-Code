@@ -1,6 +1,3 @@
-from collections import defaultdict
-import re
-
 #Problem code
 
 def isValid(number):
@@ -30,7 +27,7 @@ def checkRangeValid(start,end,function):
 	valids = 0
 	for x in range(start,end+1):
 		if function(x):
-			valid += 1
+			valids += 1
 	return valids
 
 def part1(start,end):

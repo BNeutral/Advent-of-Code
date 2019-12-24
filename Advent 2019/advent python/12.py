@@ -1,6 +1,4 @@
-from collections import defaultdict
 from util import *
-import re
 import math
 
 #File parsing stuff
@@ -30,7 +28,9 @@ def part1(positions, steps):
 	return total
 
 def part2(positions):
-	return simulateMoonUntilRepeat(positions, 2000000, 5)
+	result = simulateMoonUntilRepeat(positions, 2000000, 5)
+	#print(result)
+	return result[-1]
 
 def simulateMoons(positions,steps):
 	moons, moonPairs = createMoonsAndPairs(positions)
@@ -111,5 +111,5 @@ def main():
 	return
 
 #test1()
-test2()
+#test2()
 main()

@@ -90,8 +90,8 @@ def test3():
 def main():
 	rawInput = open("./input/16.txt").read()
 	data = lineDigitsToArray(rawInput)
-	print(part1(data,100))
-	print(part2(data))
+	print("".join(map(str,part1(data,100))))
+	print("".join(map(str,part2(data))))
 	return
 
 #test1()

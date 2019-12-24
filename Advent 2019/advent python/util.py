@@ -18,10 +18,29 @@ def minimumCommonMultiple(array):
 		mcm = mcm*i//math.gcd(mcm, i)
 	return mcm
 
+#Finds the greatest common divisor of an array
 def arrayGDC(array):
 	if len(array) <= 1:
 		return array[0]
 	return math.gcd(array[0],arrayGDC(array[1:]))
+
+#Used by modinv
+def egcd(a, b):
+    if a == 0:
+        return (b, 0, 1)
+    else:
+        g, y, x = egcd(b % a, a)
+        return (g, x - (b // a) * y, y)
+
+#Taken from google
+#Modinv is such that a*x % b = 1 => x = modinv(a,b)
+#Note that multplying the found x by k, a*(kx) % b = k, but the found kx may need % b to be in range 
+def modinv(a, m):
+    g, x, y = egcd(a, m)
+    if g != 1:
+        raise Exception('modular inverse does not exist')
+    else:
+        return x % m
 
 #Visualization
 
@@ -73,11 +92,36 @@ def drawDictScreenSimple(dic):
 		result += "\n"
 	return result	
 
+def drawSet(s, chars=["#","O"], extraVectors=[]):
+	minx = sys.maxsize
+	maxx = -sys.maxsize
+	miny = sys.maxsize
+	maxy = -sys.maxsize
+	for vector in s:
+		minx = min(vector.x,minx)
+		miny = min(vector.y,miny)
+		maxx = max(vector.x,maxx)
+		maxy = max(vector.y,maxy)
+	result = ""
+	for y in range(miny,maxy+1):
+		for x in range(minx,maxx+1):
+			pos = Vector2(x,y)
+			if pos in extraVectors:
+				result += chars[1]
+			elif pos in s:
+				result += chars[0]
+			else:
+				result += " "
+		result += "\n"
+	return result	
+
 #Classes
 
 #A class for finding cycles 
 class CycleDetector:
 
+	#state to match is an array of states
+	#min repeats is the amount of times the state should repeat in a cycle to be considered
 	def __init__(self, stateToMatch, minRepeats):
 		self.initialState = stateToMatch
 		self.stateLength = len(stateToMatch)
@@ -199,6 +243,12 @@ class Vector3:
 			return self.copy()
 		return self.divScalar(self.length())
 
+	def fourAdjacents(self):
+		return [self.add(Vector3.yup),self.add(Vector3.ydown),self.add(Vector3.xleft),self.add(Vector3.xright)]
+
+	def copy(self):
+		return Vector3(self.x, self.y, self.z)
+
 	def __iter__(self):
 		return iter((self.x, self.y, self.z))
 
@@ -233,3 +283,9 @@ class Vector3:
 			self.__setattr__("z", value)
 		else:
 			self.__setattr__(key, value)
+
+Vector3.yup = Vector3(0,-1,0)
+Vector3.ydown = Vector3(0,1,0)
+Vector3.xleft = Vector3(-1,0,0)
+Vector3.xright = Vector3(1,0,0)	
+Vector3.zero = Vector3(0,0,0)	

@@ -3,20 +3,31 @@ from threading import Thread
 
 class Interpreter:
 
-	#array is an array of ints contains the program 
-	#inp is the input as an array
-	#usefaultInput : if true requests for input return the last element of the starting input
-	def __init__(self, array, inp, useDefaultInput=True):
-		self.array = array.copy()
+	#programArray is an array of ints contains the program 
+	#inp is the starting input as an array
+	#defaultInput is the input the program should return when fetching input as a default
+	def __init__(self, programArray, inp=[], defaultInput=None):
+		self.array = programArray.copy()
 		self.inputs = Queue()
 		for i in inp:
 			self.inputs.put(i)
-		self.defaultInput = array[-1]
-		self.useDefaultInput = useDefaultInput
+		self.defaultInput = defaultInput
 		self.output = Queue()
 		self.relativeBase = 0
 		self.isRunning = False
 		self.awaitingInput = False
+		self.ops = {
+			1:self._opAdd,
+			2:self._opMul,
+			3:self._opInput,
+			4:self._opOutput,
+			5:self._opJmpTrue,
+			6:self._opJmpFalse,
+			7:self._opLessThan,
+			8:self._opEquals,
+			9:self._opAdjustBase,
+			99:self._opHalt
+		}
 
 	def __repr__(self):
 		return str(self.__dict__)
@@ -28,29 +39,38 @@ class Interpreter:
 
 	def runProgram(self):
 		self.isRunning = True
-		ops = {
-			1:self.opAdd,
-			2:self.opMul,
-			3:self.opInput,
-			4:self.opOutput,
-			5:self.opJmpTrue,
-			6:self.opJmpFalse,
-			7:self.opLessThan,
-			8:self.opEquals,
-			9:self.opAdjustBase,
-			99:self.opHalt
-		}
 		pc = 0
 		while True:
-			opcode,modes = self.parseOpcodeAndModes(pc)
-			newpc = ops[opcode](pc,modes)
+			opcode,modes = self._parseOpcodeAndModes(pc)
+			newpc = self.ops[opcode](pc,modes)
 			if newpc == -1:
 				self.isRunning = False
 				return
 			pc = newpc
 
+	#Turns a string into input for the program
+	def sendASCIIInput(self, input):
+		for char in input:
+			self.inputs.put(ord(char))
+		self.inputs.put(10)
+
+	#Returns a string with the output, blocks if size is known, has a timeout otherwise
+	def getASCIIOutput(self, size=0):
+		result = ""
+		try:
+			if size != 0:
+				for _ in range(size):
+					result += str(chr((self.output.get())))
+			else:
+				while True:
+					result += str(chr((self.output.get(timeout=5))))
+		except:
+			pass
+		return result
+
+	#Gets the input 
 	def getInput(self):
-		if self.useDefaultInput:
+		if self.defaultInput:
 			try:
 				a = self.inputs.get(False)
 				return a
@@ -61,58 +81,59 @@ class Interpreter:
 			inp = self.inputs.get()
 			return inp
 
+	#Sends the input to the interpreter
 	def giveInput(self, value):
 		self.inputs.put(value)
 		self.awaitingInput = False
 
-	def opAdd(self, pc, modes):
-		self.write(pc+3, modes[2], self.read(pc+1,modes[0]) + self.read(pc+2,modes[1]))
+	def _opAdd(self, pc, modes):
+		self._write(pc+3, modes[2], self._read(pc+1,modes[0]) + self._read(pc+2,modes[1]))
 		return pc+4
 
-	def opMul(self, pc, modes):
-		self.write(pc+3, modes[2], self.read(pc+1,modes[0]) * self.read(pc+2,modes[1]))
+	def _opMul(self, pc, modes):
+		self._write(pc+3, modes[2], self._read(pc+1,modes[0]) * self._read(pc+2,modes[1]))
 		return pc+4
 
-	def opInput(self, pc, modes):
-		self.write(pc+1, modes[0], self.getInput())
+	def _opInput(self, pc, modes):
+		self._write(pc+1, modes[0], self.getInput())
 		return pc+2
 
-	def opOutput(self, pc, modes):
-		self.output.put(self.read(pc+1,modes[0]))
+	def _opOutput(self, pc, modes):
+		self.output.put(self._read(pc+1,modes[0]))
 		return pc+2
 
-	def opJmpTrue(self, pc, modes):
-		if self.read(pc+1, modes[0]) != 0:
-			return self.read(pc+2, modes[1])
+	def _opJmpTrue(self, pc, modes):
+		if self._read(pc+1, modes[0]) != 0:
+			return self._read(pc+2, modes[1])
 		return pc+3
 
-	def opJmpFalse(self, pc, modes):
-		if self.read(pc+1, modes[0]) == 0:
-			return self.read(pc+2, modes[1])
+	def _opJmpFalse(self, pc, modes):
+		if self._read(pc+1, modes[0]) == 0:
+			return self._read(pc+2, modes[1])
 		return pc+3
 
-	def opLessThan(self, pc, modes):
-		if self.read(pc+1,modes[0]) < self.read(pc+2,modes[1]):
-			self.write(pc+3, modes[2],1)
+	def _opLessThan(self, pc, modes):
+		if self._read(pc+1,modes[0]) < self._read(pc+2,modes[1]):
+			self._write(pc+3, modes[2],1)
 		else:
-			self.write(pc+3, modes[2],0)
+			self._write(pc+3, modes[2],0)
 		return pc+4
 
-	def opEquals(self, pc, modes):
-		if self.read(pc+1,modes[0]) == self.read(pc+2,modes[1]):
-			self.write(pc+3, modes[2],1)
+	def _opEquals(self, pc, modes):
+		if self._read(pc+1,modes[0]) == self._read(pc+2,modes[1]):
+			self._write(pc+3, modes[2],1)
 		else:
-			self.write(pc+3, modes[2],0)
+			self._write(pc+3, modes[2],0)
 		return pc+4
 
-	def opHalt(self, pc, modes):
+	def _opHalt(self, pc, modes):
 		return -1
 
-	def opAdjustBase(self, pc, modes):
-		self.relativeBase += self.read(pc+1,modes[0])
+	def _opAdjustBase(self, pc, modes):
+		self.relativeBase += self._read(pc+1,modes[0])
 		return pc+2
 
-	def parseOpcodeAndModes(self,pc):
+	def _parseOpcodeAndModes(self,pc):
 		instruction = self.array[pc]
 		opcode = instruction % 100
 		modes = [0,0,0]
@@ -120,21 +141,21 @@ class Interpreter:
 			modes[x] = (instruction//pow(10,2+x)) % 10
 		return opcode,modes
 
-	def checkSize(self,index,mode):
-		self.makeIndexValid(index)
+	def _checkSize(self,index,mode):
+		self._makeIndexValid(index)
 		if mode == 0:
-			self.makeIndexValid(self.array[index])
+			self._makeIndexValid(self.array[index])
 		elif mode == 2:
-			self.makeIndexValid(self.array[index]+self.relativeBase)
+			self._makeIndexValid(self.array[index]+self.relativeBase)
 
-	def makeIndexValid(self,index):
+	def _makeIndexValid(self,index):
 		size = len(self.array)
 		if index >= size:
 			dif = index - len(self.array) + 1
 			self.array.extend([0]*dif)
 
-	def read(self, index, mode):
-		self.checkSize(index,mode)
+	def _read(self, index, mode):
+		self._checkSize(index,mode)
 		if mode == 0:
 			return self.array[self.array[index]]
 		elif mode == 1:
@@ -142,8 +163,8 @@ class Interpreter:
 		elif mode == 2:
 			return self.array[self.array[index]+self.relativeBase]
 
-	def write(self, index, mode, value):
-		self.checkSize(index,mode)
+	def _write(self, index, mode, value):
+		self._checkSize(index,mode)
 		if mode == 0:
 			self.array[self.array[index]] = value
 		elif mode == 1:

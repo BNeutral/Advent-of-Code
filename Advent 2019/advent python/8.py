@@ -1,5 +1,3 @@
-from collections import defaultdict
-import re
 import sys
 
 #Problem code
@@ -76,6 +74,6 @@ def main():
 	print(part2(rawInput))
 	return
 
-test1()
-test2()
+#test1()
+#test2()
 main()
