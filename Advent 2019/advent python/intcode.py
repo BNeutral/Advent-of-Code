@@ -55,7 +55,7 @@ class Interpreter:
 		self.inputs.put(10)
 
 	#Returns a string with the output, blocks if size is known, has a timeout otherwise
-	def getASCIIOutput(self, size=0):
+	def getASCIIOutput(self, size=0, timeout=5):
 		result = ""
 		try:
 			if size != 0:
@@ -63,7 +63,7 @@ class Interpreter:
 					result += str(chr((self.output.get())))
 			else:
 				while True:
-					result += str(chr((self.output.get(timeout=5))))
+					result += str(chr((self.output.get(timeout=timeout))))
 		except:
 			pass
 		return result

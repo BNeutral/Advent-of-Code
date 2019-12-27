@@ -168,21 +168,3 @@ def main():
 #test1()
 #test2()
 main()
-
-#Python reminders
-#range(start, end+1, step), len
-#{}, for k in dict, for k,v in dict.items(), for v in dict.values()  
-#set(), .add(x), .remove(x), .discard(x) no error if missing, x in s, |= union, &= intersect, -= difference, .copy()
-#[], .append(), .insert(i,x), .pop([i]), .remove(x), .reverse(), sort(arr) in place, sorted(arr) new arr 
-#heap: heapq lib, heappush(list, value), heappop(list), value can be a tuple and gets sorted by 1st item
-#map(single param function, list)
-#filter(single param boolean returning function, list)
-#reduce(2 param function, list)
-#lambda x: x**2
-#// integer division in python3
-#sys.maxsize
-#common global functions: abs() max() min() len()
-#from queue import Queue ->thread safe, can be blocking, .put() .get()
-#from threading import Thread ->thread = Thread(target = f). .start(), .join()
-#from itertools import permutations -> permutations(list)
-#from types import SimpleNamespace -> objet style = SimpleNamespace(**dict)	
