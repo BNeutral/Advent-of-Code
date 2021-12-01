@@ -3,8 +3,8 @@ module Day1 where
 -- Tests
 
 sample = [199, 200, 208, 210, 200, 207, 240, 269, 260, 263]
-test1 = part1 sample
-test2 = part2 sample
+test1 = part1_v2 sample
+test2 = part2_v2 sample
 
 -- Part 1
 
@@ -31,11 +31,33 @@ subPart2 (x:y:z:rest) previousSum totalIncreasing =
     else subPart2 (y:z:rest) currentSum totalIncreasing
     where currentSum = x + y + z
 
+-- Both parts, just to have the window less hardcoded at the cost of efficiency
+
+part1_v2 :: [Int] -> Int
+part1_v2 list = subPart list 0 0 1
+part2_v2 :: [Int] -> Int
+part2_v2 list = subPart list 0 0 3
+
+subPart :: [Int] -> Int -> Int -> Int -> Int
+subPart list previousSum totalIncreasing windowSize =
+    if (length window) < windowSize
+        then totalIncreasing - 1
+        else 
+            if currentSum > previousSum
+            then subPart xs currentSum (totalIncreasing + 1) windowSize
+            else subPart xs currentSum totalIncreasing windowSize
+    where x = head list
+          xs = tail list
+          window = take windowSize list
+          currentSum = sum window
+
 -- Main
 
 day1 = do
     contents <- fmap lines (readFile "input/1.txt")
-    print $ ("Test1: " ++) $ show $ test1    
-    print $ ("Part1: " ++) $ show $ part1 $ fmap read contents
+    print $ ("Test1: " ++) $ show $ test1 
     print $ ("Test2: " ++) $ show $ test2   
-    print $ ("Part2: " ++) $ show $ part2 $ fmap read contents 
+    -- print $ ("Part1: " ++) $ show $ part1 $ fmap read contents
+    -- print $ ("Part2: " ++) $ show $ part2 $ fmap read contents 
+    print $ ("Part1: " ++) $ show $ part1_v2 $ fmap read contents
+    print $ ("Part2: " ++) $ show $ part2_v2 $ fmap read contents 
