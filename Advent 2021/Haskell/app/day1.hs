@@ -51,13 +51,27 @@ subPart list previousSum totalIncreasing windowSize =
           window = take windowSize list
           currentSum = sum window
 
+-- Another version for part 1
+
+part1_v3 :: [Int] -> Int
+part1_v3 list = 
+    acum - 1
+    where (_,acum) = foldl foldCmp (0,0) list
+
+foldCmp :: (Int,Int) -> Int -> (Int,Int)
+foldCmp (previousNumber, acum) newNumber =
+    if newNumber > previousNumber
+        then (newNumber, acum+1)
+        else (newNumber, acum)
+
 -- Main
 
 day1 = do
-    contents <- fmap lines (readFile "input/1.txt")
+    contents <- fmap lines (readFile "../input/1.txt")
     print $ ("Test1: " ++) $ show $ test1 
     print $ ("Test2: " ++) $ show $ test2   
     -- print $ ("Part1: " ++) $ show $ part1 $ fmap read contents
     -- print $ ("Part2: " ++) $ show $ part2 $ fmap read contents 
     print $ ("Part1: " ++) $ show $ part1_v2 $ fmap read contents
     print $ ("Part2: " ++) $ show $ part2_v2 $ fmap read contents 
+    -- rint $ ("Part1: " ++) $ show $ part1_v3 $ fmap read contents
