@@ -8,10 +8,10 @@ test2 = part2_v2 sample
 
 -- Part 1
 
-part1 :: [Int] -> Int
+part1 :: [Integer] -> Integer
 part1 list = subPart1 list 0 0
 
-subPart1 :: [Int] -> Int -> Int -> Int
+subPart1 :: [Integer] -> Integer -> Integer -> Integer
 subPart1 [] previousNumber totalIncreasing = totalIncreasing - 1 -- We are counting the first one that isn't an increase as if it was
 subPart1 (x:rest) previousNumber totalIncreasing =
     if x > previousNumber 
@@ -20,10 +20,10 @@ subPart1 (x:rest) previousNumber totalIncreasing =
 
 -- Part 2
 
-part2 :: [Int] -> Int
+part2 :: [Integer] -> Integer
 part2 list = subPart2 list 0 0
 
-subPart2 :: [Int] -> Int -> Int -> Int
+subPart2 :: [Integer] -> Integer -> Integer -> Integer
 subPart2 (x:y:[]) previousSum totalIncreasing = totalIncreasing - 1 -- We are counting the first one that isn't an increase as if it was
 subPart2 (x:y:z:rest) previousSum totalIncreasing =
     if currentSum > previousSum
@@ -33,12 +33,12 @@ subPart2 (x:y:z:rest) previousSum totalIncreasing =
 
 -- Both parts, just to have the window less hardcoded at the cost of efficiency
 
-part1_v2 :: [Int] -> Int
+part1_v2 :: [Integer] -> Integer
 part1_v2 list = subPart list 0 0 1
-part2_v2 :: [Int] -> Int
+part2_v2 :: [Integer] -> Integer
 part2_v2 list = subPart list 0 0 3
 
-subPart :: [Int] -> Int -> Int -> Int -> Int
+subPart :: [Integer] -> Integer -> Integer -> Int -> Integer
 subPart list previousSum totalIncreasing windowSize =
     if (length window) < windowSize
         then totalIncreasing - 1
@@ -53,12 +53,12 @@ subPart list previousSum totalIncreasing windowSize =
 
 -- Another version for part 1
 
-part1_v3 :: [Int] -> Int
+part1_v3 :: [Integer] -> Integer
 part1_v3 list = 
     acum - 1
     where (_,acum) = foldl foldCmp (0,0) list
 
-foldCmp :: (Int,Int) -> Int -> (Int,Int)
+foldCmp :: (Integer,Integer) -> Integer -> (Integer,Integer)
 foldCmp (previousNumber, acum) newNumber =
     if newNumber > previousNumber
         then (newNumber, acum+1)
