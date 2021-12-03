@@ -8,19 +8,15 @@ pub fn day1(input : &String) -> () {
 }
 
 
-#[allow(dead_code)]
-pub fn day1_1(input : &Vec<i32>) -> u32 {
+fn day1_1(input : &Vec<i32>) -> u32 {
 	return solve(input, 1);
 }
 
-#[allow(dead_code)]
-pub fn day1_2(input : &Vec<i32>) -> u32 {
+fn day1_2(input : &Vec<i32>) -> u32 {
 	return solve(input, 3);
 }
 
 
-/// Given a string and a step, calculates the sum of identical digits step places ahead, looping
-#[allow(dead_code)]
 fn solve(input : &Vec<i32>, window_size : usize) -> u32 {
 	let mut counter = 0;
 	for i in 0..(input.len() - window_size) {
@@ -32,7 +28,7 @@ fn solve(input : &Vec<i32>, window_size : usize) -> u32 {
 			counter += 1; 
 		}		
 	} 
-	return counter
+	counter
 }
 
 #[cfg(test)]
