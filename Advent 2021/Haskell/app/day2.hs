@@ -47,7 +47,7 @@ parseLine2 (pos, depth, aim) badInput =
 
 day2 = do
     contents <- fmap lines (readFile "../input/2.txt")
-    print $ ("Test1: " ++) $ show $ test1 
-    print $ ("Test2: " ++) $ show $ test2   
+    print $ ("Test1: " ++) $ show test1 
+    print $ ("Test2: " ++) $ show test2   
     print $ ("Part1: " ++) $ show $ part1 contents
     print $ ("Part2: " ++) $ show $ part2 contents 

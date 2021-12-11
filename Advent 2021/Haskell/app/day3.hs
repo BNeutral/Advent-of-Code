@@ -12,32 +12,26 @@ test2 = part2 (lines sample)
 -- Part 1
 
 part1 :: [String] -> Int
-part1 input = 
+part1 input =
     gamma * epsilon
-    where     
+    where
         asDigitLists = toDigitLists input
         summedList = sumAllDigitLists asDigitLists
-        middlePoint = div (length (input)) 2   
+        middlePoint = div (length input) 2
         gamma = binToDec $ map (gammaFilter middlePoint) summedList
         epsilon = binToDec $ map (epsilonFIlter middlePoint) summedList
 
 toDigitLists :: [String] -> [[Int]]
-toDigitLists input = map toDigitList input
+toDigitLists = map toDigitList
 
 toDigitList :: String -> [Int]
 toDigitList [x] =
     [digitToInt x]
-toDigitList (x:xs) = 
-    [digitToInt x] ++ toDigitList xs
+toDigitList (x:xs) =
+    digitToInt x : toDigitList xs
 
 sumAllDigitLists :: [[Int]] -> [Int]
-sumAllDigitLists (x:xs) = foldl sumTwoDigitLists x xs
-
-sumTwoDigitLists :: [Int] -> [Int] -> [Int]
-sumTwoDigitLists [x] [y] =
-    [x + y]
-sumTwoDigitLists (x:xs) (y:ys) =
-    [x + y] ++ sumTwoDigitLists xs ys
+sumAllDigitLists (x:xs) = foldl (zipWith (+)) x xs
 
 binToDec :: [Int] -> Int
 binToDec list = result
@@ -55,36 +49,61 @@ gammaFilter middlePoint x =
 epsilonFIlter :: Int -> Int -> Int
 epsilonFIlter middlePoint x =
     if x < middlePoint
-    then 1 
-    else 0    
+    then 1
+    else 0
 
 -- Part 2
 
-part2 :: [String] -> [Int]
-part2 input = 
-    oxyGen
-    where     
-        asDigitLists = toDigitLists input
-        summedList = sumAllDigitLists asDigitLists
-        middlePoint = div (length input) 2   
-        gamma = map (gammaFilter middlePoint) summedList
-        oxyGen = matchByOne asDigitLists
-
-matchByOne :: [[Int]] -> [Int] 
-matchByOne [x] = x
-matchByOne (x:xs) = 
-    matchByOne removedHeads 
+part2 :: [String] -> (Int,[Int])
+part2 input =
+    (middlePoint, summedList)
+    -- asDigitListsEnumerated !! oxyId
     where
-        filtered = filter isHeadOne (x:xs)
-        removedHeads = map tail filtered
+        asDigitLists = toDigitLists input
+        asDigitListsEnumerated = zip [0..] asDigitLists
+        summedList = sumAllDigitLists asDigitLists
+        middlePoint = div (length input) 2
+        gamma = map (gammaFilter middlePoint) summedList
+        epsilon = map (epsilonFIlter middlePoint) summedList
+        oxyId = matchByList asDigitListsEnumerated gamma
+        co2Id = matchByList asDigitListsEnumerated epsilon
 
-isHeadOne :: [Int] -> Bool
-isHeadOne (x:xs) = x == 1
+matchByList :: [(Int, [Int])] -> [Int] -> Int
+matchByList [(id, x)] (o:os) = id
+matchByList [(id, x)] [] = id
+matchByList ((id,x:xs):next) (o:os) =
+    matchByList (removeHeads $ filterByNum ((id,x:xs):next) o) os
+
+removeHeads :: [(Int, [Int])] -> [(Int, [Int])]
+removeHeads [(id,x:xs)] = [(id,xs)]
+removeHeads ((id,x:xs):next) =
+    (id,xs) : removeHeads next
+
+filterByNum :: [(Int, [Int])] -> Int -> [(Int, [Int])]
+filterByNum [(id,x:xs)] filterVal =
+    [(id,x:xs) | x == filterVal]
+filterByNum ((id,x:xs):next) filterVal =
+    if x == filterVal
+    then (id,x:xs) : filterByNum next filterVal
+    else filterByNum next filterVal
+
+filterParse :: [(Int, [Int])] -> [(Int, [Int])]
+filterParse [(id,x:xs)] = [(id,x:xs)]
+filterParse input =
+    (1,summedList)
+    where
+        summed = map ((+) . head . snd) input
+        middlePoint = div (length input) 2
+        oxy = gammaFilter middlePoint summed
+        co2 = epsilonFIlter middlePoint summed
+        oxyId = matchByList asDigitListsEnumerated gamma
+        co2Id = matchByList asDigitListsEnumerated epsilon
+
 -- Main
 
 day3 = do
     contents <- fmap lines (readFile "../input/3.txt")
-    print $ ("Test1: " ++) $ show $ test1
-    print $ ("Test2: " ++) $ show $ test2   
+    print $ ("Test1: " ++) $ show test1
+    print $ ("Test2: " ++) $ show test2
     print $ ("Part1: " ++) $ show $ part1 contents
-    -- print $ ("Part2: " ++) $ show $ part2 contents 
+    --print $ ("Part2: " ++) $ show $ part2 contents
