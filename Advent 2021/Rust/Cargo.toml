@@ -5,4 +5,5 @@ authors = ["bn <BNeutral@users.noreply.github.com>"]
 
 [dependencies]
 regex = "0.2.3"
-
+priority-queue = "1.2.1"
+hex = "0.4"

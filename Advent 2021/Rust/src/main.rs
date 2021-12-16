@@ -11,6 +11,11 @@ mod a8;
 mod a9;
 mod a10;
 mod a11;
+mod a12;
+mod a13;
+mod a14;
+mod a15;
+mod a16;
 
 use std::fs::File;
 use std::io::prelude::*;
@@ -25,6 +30,6 @@ fn read_input(path : &str) -> String {
 
 #[allow(unused_mut)]
 fn main() {
-    let mut s = read_input("../input/11.txt");
-	a11::day11(&s);
+    let mut s = read_input("../input/16.txt");
+	a16::day16(&s);
 }

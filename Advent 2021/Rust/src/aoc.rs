@@ -12,7 +12,7 @@ pub fn to_2d_vector(input : &str) -> Vec<Vec<u32>> {
 	let mut res = Vec::new();
 	for line in input.lines() {
 		let mut tiles = Vec::new();
-		for ch in line.chars() {
+		for ch in line.trim().chars() {
 			tiles.push(ch.to_digit(10).unwrap());
 		}
 		res.push(tiles);
@@ -27,4 +27,8 @@ pub fn to_char_vec(input : &str) -> Vec<Vec<char>> {
 		res.push(line.chars().collect());
 	}
 	res
+}
+
+pub fn is_lowercase(string : &String) -> bool {
+	string.chars().all(|c| c.is_ascii_lowercase())
 }
