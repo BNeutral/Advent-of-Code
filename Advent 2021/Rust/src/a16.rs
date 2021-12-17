@@ -190,7 +190,6 @@ mod tests {
 	#[test]
 	fn test16_parse() {
 		let bit_vec = BitVec::new(&String::from("D2FE28"));
-		println!("{}",bit_vec);
 		assert_eq!(6,bit_vec.get_bits(0, 3));
 		assert_eq!(4,bit_vec.get_bits(3, 3));
 		assert_eq!(1,bit_vec.get_bit(6));
