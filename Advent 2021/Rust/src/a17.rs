@@ -1,5 +1,4 @@
 use regex::Regex;
-//use std::collections::HashSet;
 
 #[allow(dead_code)]
 pub fn day17(input : &String) -> () {
