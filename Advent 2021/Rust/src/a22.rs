@@ -85,8 +85,6 @@ fn solve_fast(cubes : &Vec<Cube>) -> i64 {
 		}
 	}
 
-	//println!("Final cubes {:?}", on_cubes);
-
 	on_cubes.iter().fold(0, |x , cube| x+cube.geometry.volume())	
 }
 
@@ -131,7 +129,7 @@ impl Bounds {
 	}
 
 	pub fn boolean_split(&self, other : &Bounds) -> Vec<Bounds> {
-		let mut result : HashSet<Bounds> = HashSet::new();
+		let mut result : Vec<Bounds> = Vec::new();
 		let overlapping = other.constrain(self);
 
 		let x_regions : Vec<(i64,i64)> = Bounds::split_region(self.x, overlapping.x);
@@ -146,18 +144,13 @@ impl Bounds {
 						y : *yb,
 						z : *zb,
 					};
-					result.insert(bounds);
+					if bounds != overlapping {
+						result.push(bounds);
+					}
 				}
 			}
 		}
-		result.remove(&overlapping);
-
-		let mut re_result : Vec<Bounds> = Vec::new();
-		for b in result {
-			re_result.push(b);
-		}
-
-		re_result
+		result
 	}
 
 	fn split_region( (mina, maxa) : (i64, i64), (minb, maxb) : (i64, i64))  -> Vec<(i64, i64)> {
@@ -165,8 +158,7 @@ impl Bounds {
 		regions.push( (mina, minb-1) );
 		regions.push( (minb, maxb) );
 		regions.push( (maxb+1, maxa) );
-		regions = regions.iter().filter(|a| a.0 <= a.1).cloned().collect();
-		regions
+		regions.iter().filter(|a| a.0 <= a.1).cloned().collect()		
 	} 
 }
 
